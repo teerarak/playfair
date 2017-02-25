@@ -8,7 +8,7 @@
       Plaintext : <input type="text" name="" v-model="plaintext_new">
       <button v-on:click="prePlaintext" type="submit" class="btn btn-default">OK</button>
       <h1>{{plainDivided_adjust}}</h1>
-    <table border="2" v-if="Key_adjust" align="center">
+    <table border="2" v-if="Key_adjust">
       <tr>
         <td>{{Key_2D[0][0]}}</td>
         <td>{{Key_2D[0][1]}}</td>
@@ -44,7 +44,9 @@
         <td>{{Key_2D[4][3]}}</td>
         <td>{{Key_2D[4][4]}}</td>
       </tr>
-    </table>
+    </table><br />
+    <button @click="encrypt(plainDivided_adjust)" v-show="letEn">Encrypt</button>
+    <h1>Output : {{output}}</h1>
   </div>
 </template>
 
@@ -73,7 +75,10 @@ export default {
       plaintext: '',
       plainDivided: [],
       plainDivided_adjust: [],
-      plaintext_new: ''
+      plaintext_new: '',
+      output: '',
+      count: 0,
+      letEn: true
     }
   },
   methods: {
@@ -191,11 +196,91 @@ export default {
       } else {
         vm.plainDivided_adjust[vm.plainDivided_adjust.length - 1] = vm.plainDivided_adjust[vm.plainDivided_adjust.length - 1] + 'Z'
       }
+    },
+    encrypt (item) {
+      let vm = this
+      var pair = item[vm.count]
+      var check = pair.split('')
+      var position = {
+        char1: {
+          row: 0,
+          column: 0
+        },
+        char2: {
+          row: 0,
+          column: 0
+        }
+      }
+
+      for (var a = 0; a < 2; a++) {
+        for (var r = 0; r < vm.Key_2D.length; r++) {
+          for (var c = 0; c < vm.Key_2D[r].length; c++) {
+            if (check[a] === vm.Key_2D[r][c]) {
+              if (a === 0) {
+                position.char1.row = r
+                position.char1.column = c
+              } else {
+                position.char2.row = r
+                position.char2.column = c
+              }
+            }
+          }
+        }
+      }
+      for (var j = 0; j < 2; j++) {
+        if (position.char1.row !== position.char2.row) {
+          if (position.char1.column !== position.char2.column) {
+            if (j === 0) {
+              check[j] = vm.Key_2D[position.char1.row][position.char2.column]
+            } else {
+              check[j] = vm.Key_2D[position.char2.row][position.char1.column]
+            }
+            vm.output += check[j]
+          } else {
+            if (j === 0) {
+              if (position.char1.row !== 4) {
+                check[j] = vm.Key_2D[position.char1.row + 1][position.char1.column]
+              } else {
+                position.char1.row = 0
+                check[j] = vm.Key_2D[position.char1.row][position.char1.column]
+              }
+            } else {
+              if (position.char2.row !== 4) {
+                check[j] = vm.Key_2D[position.char2.row + 1][position.char2.column]
+              } else {
+                position.char2.row = 0
+                check[j] = vm.Key_2D[position.char2.row][position.char2.column]
+              }
+            }
+            vm.output += check[j]
+          }
+        } else {
+          if (j === 0) {
+            if (position.char1.column !== 4) {
+              check[j] = vm.Key_2D[position.char1.row][position.char1.column + 1]
+            } else {
+              position.char1.column = 0
+              check[j] = vm.Key_2D[position.char1.row][position.char1.column]
+            }
+          } else {
+            if (position.char2.column !== 4) {
+              check[j] = vm.Key_2D[position.char2.row][position.char2.column + 1]
+            } else {
+              position.char2.column = 0
+              check[j] = vm.Key_2D[position.char2.row][position.char2.column]
+            }
+          }
+          vm.output += check[j]
+        }
+      }
+      vm.count++
+      if (vm.count === item.length) {
+        vm.letEn = false
+      }
     }
   }
 }
 </script>
-
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
