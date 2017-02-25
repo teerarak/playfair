@@ -10,39 +10,39 @@
       <h1>{{plainDivided_adjust}}</h1>
     <table border="2" v-if="Key_adjust">
       <tr>
-        <td>{{Key_2D[0][0]}}</td>
-        <td>{{Key_2D[0][1]}}</td>
-        <td>{{Key_2D[0][2]}}</td>
-        <td>{{Key_2D[0][3]}}</td>
-        <td>{{Key_2D[0][4]}}</td>
+        <td :bgcolor="color[0][0]">{{Key_2D[0][0]}}</td>
+        <td :bgcolor="color[0][1]">{{Key_2D[0][1]}}</td>
+        <td :bgcolor="color[0][2]">{{Key_2D[0][2]}}</td>
+        <td :bgcolor="color[0][3]">{{Key_2D[0][3]}}</td>
+        <td :bgcolor="color[0][4]">{{Key_2D[0][4]}}</td>
       </tr>
       <tr>
-        <td>{{Key_2D[1][0]}}</td>
-        <td>{{Key_2D[1][1]}}</td>
-        <td>{{Key_2D[1][2]}}</td>
-        <td>{{Key_2D[1][3]}}</td>
-        <td>{{Key_2D[1][4]}}</td>
+        <td :bgcolor="color[1][0]">{{Key_2D[1][0]}}</td>
+        <td :bgcolor="color[1][1]">{{Key_2D[1][1]}}</td>
+        <td :bgcolor="color[1][2]">{{Key_2D[1][2]}}</td>
+        <td :bgcolor="color[1][3]">{{Key_2D[1][3]}}</td>
+        <td :bgcolor="color[1][4]">{{Key_2D[1][4]}}</td>
       </tr>
       <tr>
-        <td>{{Key_2D[2][0]}}</td>
-        <td>{{Key_2D[2][1]}}</td>
-        <td>{{Key_2D[2][2]}}</td>
-        <td>{{Key_2D[2][3]}}</td>
-        <td>{{Key_2D[2][4]}}</td>
+        <td :bgcolor="color[2][0]">{{Key_2D[2][0]}}</td>
+        <td :bgcolor="color[2][1]">{{Key_2D[2][1]}}</td>
+        <td :bgcolor="color[2][2]">{{Key_2D[2][2]}}</td>
+        <td :bgcolor="color[2][3]">{{Key_2D[2][3]}}</td>
+        <td :bgcolor="color[2][4]">{{Key_2D[2][4]}}</td>
       </tr>
       <tr>
-        <td>{{Key_2D[3][0]}}</td>
-        <td>{{Key_2D[3][1]}}</td>
-        <td>{{Key_2D[3][2]}}</td>
-        <td>{{Key_2D[3][3]}}</td>
-        <td>{{Key_2D[3][4]}}</td>
+        <td :bgcolor="color[3][0]">{{Key_2D[3][0]}}</td>
+        <td :bgcolor="color[3][1]">{{Key_2D[3][1]}}</td>
+        <td :bgcolor="color[3][2]">{{Key_2D[3][2]}}</td>
+        <td :bgcolor="color[3][3]">{{Key_2D[3][3]}}</td>
+        <td :bgcolor="color[3][4]">{{Key_2D[3][4]}}</td>
       </tr>
       <tr>
-        <td>{{Key_2D[4][0]}}</td>
-        <td>{{Key_2D[4][1]}}</td>
-        <td>{{Key_2D[4][2]}}</td>
-        <td>{{Key_2D[4][3]}}</td>
-        <td>{{Key_2D[4][4]}}</td>
+        <td :bgcolor="color[4][0]">{{Key_2D[4][0]}}</td>
+        <td :bgcolor="color[4][1]">{{Key_2D[4][1]}}</td>
+        <td :bgcolor="color[4][2]">{{Key_2D[4][2]}}</td>
+        <td :bgcolor="color[4][3]">{{Key_2D[4][3]}}</td>
+        <td :bgcolor="color[4][4]">{{Key_2D[4][4]}}</td>
       </tr>
     </table><br />
     <button @click="encrypt(plainDivided_adjust)" v-show="letEn">Encrypt</button>
@@ -78,7 +78,14 @@ export default {
       plaintext_new: '',
       output: '',
       count: 0,
-      letEn: true
+      letEn: true,
+      color: [
+        ['white', 'white', 'white', 'white', 'white'],
+        ['white', 'white', 'white', 'white', 'white'],
+        ['white', 'white', 'white', 'white', 'white'],
+        ['white', 'white', 'white', 'white', 'white'],
+        ['white', 'white', 'white', 'white', 'white']
+      ]
     }
   },
   methods: {
@@ -199,6 +206,11 @@ export default {
     },
     encrypt (item) {
       let vm = this
+      for (var row = 0; row < 5; row++) {
+        for (var col = 0; col < 5; col++) {
+          vm.color[row][col] = 'white'
+        }
+      }
       var pair = item[vm.count]
       var check = pair.split('')
       var position = {
@@ -219,9 +231,11 @@ export default {
               if (a === 0) {
                 position.char1.row = r
                 position.char1.column = c
+                vm.color[r][c] = 'green'
               } else {
                 position.char2.row = r
                 position.char2.column = c
+                vm.color[r][c] = 'green'
               }
             }
           }
@@ -232,24 +246,30 @@ export default {
           if (position.char1.column !== position.char2.column) {
             if (j === 0) {
               check[j] = vm.Key_2D[position.char1.row][position.char2.column]
+              vm.color[position.char1.row][position.char2.column] = 'red'
             } else {
               check[j] = vm.Key_2D[position.char2.row][position.char1.column]
+              vm.color[position.char2.row][position.char1.column] = 'red'
             }
             vm.output += check[j]
           } else {
             if (j === 0) {
               if (position.char1.row !== 4) {
                 check[j] = vm.Key_2D[position.char1.row + 1][position.char1.column]
+                vm.color[position.char1.row + 1][position.char1.column] = 'red'
               } else {
                 position.char1.row = 0
                 check[j] = vm.Key_2D[position.char1.row][position.char1.column]
+                vm.color[position.char1.row][position.char1.column] = 'red'
               }
             } else {
               if (position.char2.row !== 4) {
                 check[j] = vm.Key_2D[position.char2.row + 1][position.char2.column]
+                vm.color[position.char2.row + 1][position.char2.column] = 'red'
               } else {
                 position.char2.row = 0
                 check[j] = vm.Key_2D[position.char2.row][position.char2.column]
+                vm.color[position.char2.row][position.char2.column] = 'red'
               }
             }
             vm.output += check[j]
@@ -258,16 +278,20 @@ export default {
           if (j === 0) {
             if (position.char1.column !== 4) {
               check[j] = vm.Key_2D[position.char1.row][position.char1.column + 1]
+              vm.color[position.char1.row][position.char1.column + 1] = 'red'
             } else {
               position.char1.column = 0
               check[j] = vm.Key_2D[position.char1.row][position.char1.column]
+              vm.color[position.char1.row][position.char1.column] = 'red'
             }
           } else {
             if (position.char2.column !== 4) {
               check[j] = vm.Key_2D[position.char2.row][position.char2.column + 1]
+              vm.color[position.char2.row][position.char2.column + 1] = 'red'
             } else {
               position.char2.column = 0
               check[j] = vm.Key_2D[position.char2.row][position.char2.column]
+              vm.color[position.char2.row][position.char2.column] = 'red'
             }
           }
           vm.output += check[j]
