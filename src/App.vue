@@ -3,6 +3,7 @@
 
       Keywords : <input type="text" name="" v-model="keyword">
       <button v-on:click="preProcessing" type="submit" class="btn btn-default">OK</button>
+      <h1>{{Key_adjust}}</h1>
 
       Plaintext : <input type="text" name="" v-model="plaintext_new">
       <button v-on:click="prePlaintext" type="submit" class="btn btn-default">OK</button>
@@ -44,13 +45,7 @@
         <td :bgcolor="color[4][4]">{{Key_2D[4][4]}}</td>
       </tr>
     </table><br />
-    <div v-if="letEn">
-      <button @click="encrypt(plainDivided_adjust)" >Encrypt</button>
-    </div>
-
-    <div v-else>
-      <a href="index.html">Refreh</a>
-    </div>
+    <button @click="encrypt(plainDivided_adjust)" v-show="letEn">Encrypt</button>
     <h1>Output : {{output}}</h1>
   </div>
 </template>
@@ -96,7 +91,6 @@ export default {
   methods: {
     preProcessing () {
       let vm = this
-      vm.plainDivided_adjust = []
       vm.preProcess = vm.keyword.split('')
       var x = 0
       while (x < vm.preProcess.length) {
@@ -209,9 +203,6 @@ export default {
       } else {
         vm.plainDivided_adjust[vm.plainDivided_adjust.length - 1] = vm.plainDivided_adjust[vm.plainDivided_adjust.length - 1] + 'Z'
       }
-      vm.plaintext = ''
-      vm.plainDivided = []
-      vm.plaintext_adjust = ''
     },
     encrypt (item) {
       let vm = this
@@ -237,6 +228,16 @@ export default {
         for (var r = 0; r < vm.Key_2D.length; r++) {
           for (var c = 0; c < vm.Key_2D[r].length; c++) {
             if (check[a] === vm.Key_2D[r][c]) {
+              if (a === 0) {
+                position.char1.row = r
+                position.char1.column = c
+                vm.color[r][c] = 'green'
+              } else {
+                position.char2.row = r
+                position.char2.column = c
+                vm.color[r][c] = 'green'
+              }
+            } else if (check[a] === 'J' && vm.Key_2D[r][c] === 'I') {
               if (a === 0) {
                 position.char1.row = r
                 position.char1.column = c
