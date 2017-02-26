@@ -70,7 +70,12 @@
       <div class="row">
         <div class="col-md-12">
           <div class="w3-padding-4 w3-center" v-if="Key_adjust">
-            <center><button @click="encrypt(plainDivided_adjust)" v-show="letEn" class="btn btn-default"><b>Encrypt</b></button></center>
+            <div class="" v-if="letEn">
+              <button @click="encrypt(plainDivided_adjust)"  class="btn btn-default"><b>Encrypt</b></button>
+            </div>
+            <div class="" v-else>
+              <a href="https://playfair-37b14.firebaseapp.com/" class="btn btn-default">refresh</a>
+            </div>
           </div>
         </div>
       </div>
